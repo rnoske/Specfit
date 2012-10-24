@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Fittergui</class>
- <widget class="QMainWindow" name="Fittergui">
+ <class>Specfit</class>
+ <widget class="QMainWindow" name="Specfit">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,33 +11,186 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Fittergui</string>
+   <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="OpenSpectrum_pushButton">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>200</y>
-      <width>75</width>
-      <height>23</height>
+      <x>20</x>
+      <y>40</y>
+      <width>111</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>click me</string>
+     <string>Open Spectrum</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Spectrum_label">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>30</y>
+      <width>551</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Spektrum</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="OpenPeaklist_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Open Peaklist</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Plotter_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>500</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Plot things</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>120</y>
-      <width>311</width>
-      <height>31</height>
+      <x>30</x>
+      <y>160</y>
+      <width>221</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Guess Spectrum boundaries:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>190</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Start nm</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>220</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>End nm</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="Start_nm_doubleSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>190</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="decimals">
+     <number>4</number>
+    </property>
+    <property name="maximum">
+     <double>10000.000000000000000</double>
+    </property>
+    <property name="value">
+     <double>380.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="End_nm_doubleSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>220</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="decimals">
+     <number>4</number>
+    </property>
+    <property name="maximum">
+     <double>10000.000000000000000</double>
+    </property>
+    <property name="value">
+     <double>620.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FitPeaks_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>290</y>
+      <width>75</width>
+      <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Mein text der gecleared werden soll</string>
+     <string>Fit Peaks</string>
     </property>
    </widget>
   </widget>
@@ -50,57 +203,80 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuMenu">
-    <property name="title">
-     <string>Menu</string>
-    </property>
-    <addaction name="actionLoad"/>
-   </widget>
-   <addaction name="menuMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionLoad">
-   <property name="text">
-    <string>Load</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>actionLoad</sender>
-   <signal>triggered()</signal>
-   <receiver>label</receiver>
-   <slot>clear()</slot>
+   <sender>OpenPeaklist_pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Specfit</receiver>
+   <slot>open_peaklist()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
+     <x>83</x>
+     <y>43</y>
     </hint>
     <hint type="destinationlabel">
-     <x>325</x>
-     <y>156</y>
+     <x>206</x>
+     <y>26</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>OpenSpectrum_pushButton</sender>
    <signal>clicked()</signal>
-   <receiver>Fittergui</receiver>
-   <slot>raysfunc()</slot>
+   <receiver>Specfit</receiver>
+   <slot>open_spectrum()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>148</x>
-     <y>232</y>
+     <x>105</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
-     <x>177</x>
-     <y>296</y>
+     <x>125</x>
+     <y>112</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Plotter_pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Specfit</receiver>
+   <slot>plot_things()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>534</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>533</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FitPeaks_pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Specfit</receiver>
+   <slot>fit_peaks()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>97</x>
+     <y>321</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>322</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
-  <slot>raysfunc()</slot>
+  <slot>open_spectrum()</slot>
+  <slot>open_peaklist()</slot>
+  <slot>fit_peaks()</slot>
+  <slot>plot_things()</slot>
  </slots>
 </ui>
