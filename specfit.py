@@ -31,11 +31,11 @@ class specfit(QtGui.QMainWindow):
         self.myIo = rnio.RnIo()
         
         #just for testing purposes
-        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/spectrum1.prf'
+        filepath = 'C:/Python/SpyDev/Specfit/testdata/spectrum1.prf'
         arr = self.myIo.read_prf_nparray(filepath)
         self.ph.set_spectrum(arr)
         #only for testing!!!
-        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/Peaklist.dat'
+        filepath = 'C:/Python/SpyDev/Specfit/testdata/Peaklist.dat'
         arr = self.myIo.read_originPeaklist_nparray(filepath)
         self.ph.set_peaklist(arr)
         

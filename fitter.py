@@ -5,7 +5,6 @@ import numpy as np
 from scipy.optimize import leastsq
 import matplotlib.pyplot as plt
 #from multiprocessing import Pool, Process
-from lmfit import minimize, Parameters, Parameter, report_errors
 
 class Fitter():
     """ Class for fitting data
@@ -144,11 +143,14 @@ class Fitter():
         return param
         
         
-    def gauss(self, x, b, a, mean, sd):
+    def gauss(self, x, b, a, m, s):
+        """
         gauss = []
         for i in range(x.size):
-            gauss.append(b+a*np.exp(-((x[i]-mean)/sd)**2))
+            gauss.append(b+a*np.exp(-((x[i]-m)/s)**2))
         return np.array(gauss)
+        """
+        return b+a*np.exp(-((x-m)/s)**2)
       
     def multi_gauss_fit(self, x, y, n, b, a, m, s, plotflag = True):
         """ Fit n Gauss functions do data
@@ -174,23 +176,28 @@ class Fitter():
         Returns:
             b, a, m, s
             
-        """           
+        """    
+        _a = np.arange(n)
+        _m = np.arange(n)
+        _s = np.arange(n)
         def res(p, y, x):
             #initialisation of paramters
             b = p[0]
-            a = []
-            m = []
-            s = []
+            """
+            a = np.arange(n)
+            m = np.arange(n)
+            s = np.arange(n)
+            """
             for i in xrange(n):
-                a.append(p[i+1]) #+1 because 0 is offset b
-                m.append(p[i+1+n]) #3 because 3 params
-                s.append(p[i+1+(2*n)])
+                _a[i] = (p[i+1]) #+1 because 0 is offset b
+                _m[i] = (p[i+1+n]) #3 because 3 params
+                _s[i] = (p[i+1+(2*n)])
                 #print a, m, s
               
             #generation fit function
-            y_fit = self.gauss(x, b, a[0], m[0], s[0])
+            y_fit = self.gauss(x, b, _a[0], _m[0], _s[0])
             for i in xrange(1,n):
-                y_fit += self.gauss(x, b, a[i], m[i], s[i])
+                y_fit += self.gauss(x, b, _a[i], _m[i], _s[i])
             err = y - y_fit
             return err
         #parameter magic, notwendig um paramter für leastsq zu bekommen
@@ -203,7 +210,7 @@ class Fitter():
         for item in s:
             p.append(item)
         p = np.array(p)
-        param, success = leastsq(res, p, args = (y, x), maxfev=1000)
+        param, success = leastsq(res, p, args = (y, x)) #, maxfev=1000
         #print param
         
         #result function
@@ -231,31 +238,7 @@ class Fitter():
         
         return b, a, m, s
         
-    def multi_lmfit_gauss(self, params):
-        """ Multiplegauss fit with lmfit and bounds
-        
-        """
-        
-        def res(params, x, y):
-            b = params['back'].value
-            a1 = params['amp1'].value
-            a2 = params['amp2'].value
-        
-        
-        
-        
-    def fit_multi_lmfit_gauss(self):
-        
-        params = Parameters()
-        params.add('back', value = 0, min = 0)
-        params.add('amp1', value = 1, min = 0)
-        params.add('amp2', value = 1, min = 0)
-        params.add('mean1', value = -5)
-        params.add('mean2', value = -5)
-        params.add('stdd1', value = 1)
-        params.add('stdd2', value = 1)
-        
-        self.multi_lmfit_gauss(params)
+
         
 if __name__ == "__main__":
     myfitter = Fitter()
@@ -263,9 +246,10 @@ if __name__ == "__main__":
     n = 2
     b = 0.
     a = [1., 1.]
-    m = [-5., 0.]
+    m = [-5., 1.]
     s = [1., 1.]
     x, y = myfitter.create_testdata()
-    #param = myfitter.multi_gauss_fit(x, y_real, n, b, a, m, s)
+    param = myfitter.multi_gauss_fit(x, y, n, b, a, m, s)
+
     
     

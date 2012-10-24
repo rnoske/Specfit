@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'Fittergui.ui'
 #
-# Created: Wed Oct 24 16:30:05 2012
-#      by: PyQt4 UI code generator 4.9.4
+# Created: Wed Oct 24 20:59:08 2012
+#      by: PyQt4 UI code generator 4.9.5
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -80,6 +80,21 @@ class Ui_Specfit(object):
         self.FitPeaks_pushButton = QtGui.QPushButton(self.centralwidget)
         self.FitPeaks_pushButton.setGeometry(QtCore.QRect(40, 290, 75, 23))
         self.FitPeaks_pushButton.setObjectName(_fromUtf8("FitPeaks_pushButton"))
+        self.tableWidget = QtGui.QTableWidget(self.centralwidget)
+        self.tableWidget.setGeometry(QtCore.QRect(350, 30, 271, 251))
+        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
+        self.tableWidget.setColumnCount(2)
+        self.tableWidget.setRowCount(1)
+        item = QtGui.QTableWidgetItem()
+        self.tableWidget.setVerticalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        self.tableWidget.setItem(0, 0, item)
+        item = QtGui.QTableWidgetItem()
+        self.tableWidget.setItem(0, 1, item)
         Specfit.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(Specfit)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -106,6 +121,19 @@ class Ui_Specfit(object):
         self.label_2.setText(QtGui.QApplication.translate("Specfit", "Start nm", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Specfit", "End nm", None, QtGui.QApplication.UnicodeUTF8))
         self.FitPeaks_pushButton.setText(QtGui.QApplication.translate("Specfit", "Fit Peaks", None, QtGui.QApplication.UnicodeUTF8))
+        item = self.tableWidget.verticalHeaderItem(0)
+        item.setText(QtGui.QApplication.translate("Specfit", "bla", None, QtGui.QApplication.UnicodeUTF8))
+        item = self.tableWidget.horizontalHeaderItem(0)
+        item.setText(QtGui.QApplication.translate("Specfit", "Wellenlaenge", None, QtGui.QApplication.UnicodeUTF8))
+        item = self.tableWidget.horizontalHeaderItem(1)
+        item.setText(QtGui.QApplication.translate("Specfit", "Intensitaet", None, QtGui.QApplication.UnicodeUTF8))
+        __sortingEnabled = self.tableWidget.isSortingEnabled()
+        self.tableWidget.setSortingEnabled(False)
+        item = self.tableWidget.item(0, 0)
+        item.setText(QtGui.QApplication.translate("Specfit", "123", None, QtGui.QApplication.UnicodeUTF8))
+        item = self.tableWidget.item(0, 1)
+        item.setText(QtGui.QApplication.translate("Specfit", "456", None, QtGui.QApplication.UnicodeUTF8))
+        self.tableWidget.setSortingEnabled(__sortingEnabled)
 
 
 if __name__ == "__main__":

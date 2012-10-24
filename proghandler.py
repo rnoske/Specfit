@@ -54,18 +54,19 @@ class ProgHandler():
         n = len(_g_px) #number of gauss functions to fit
         y = self.spectrum[:, 1]
         x = self.spectrum[:, 0]
-        b = 0 #background
-        a = max(y) / _g_int
+        b = 0. #background
+        #a = _g_int * (max(y)/max(_g_int)) #intensities are bullshit!
+        
         m = _g_px
-        s = [5]*n
-        
-        print _g_int
-        print max(y)
-        print m
-        print a
+        s = [1]*n
         
         
-        self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, plotflag = True)
+        m = [96, 111, 233, 712, 847, 856]
+        a = []
+        for i in xrange(len(m)):
+            a.append(y[m[i]])
+        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, plotflag = True)
+        #print param
         
         
         
@@ -105,7 +106,7 @@ class ProgHandler():
         for entry in self.peaklist:
             wavelength = entry[0]
             intensity = entry[1]
-            if wavelength >= start_nm and wavelength <= end_nm:
+            if wavelength >= start_nm and wavelength <= end_nm and intensity > 100:
                 _pl.append([wavelength, intensity])
         return _pl
         
