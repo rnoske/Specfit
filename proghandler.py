@@ -41,6 +41,14 @@ class ProgHandler():
         """
         self.peaklist = nparray
         
+    def set_workspace(self, workspace):
+        """ Set the workspace
+        
+        workspace (str): workspace filepath
+        
+        """
+        self.workspace = workspace
+        
         
     def calibrate_wavelength(self):
         """ Calibrate the wavelength of the spectrum
@@ -84,9 +92,9 @@ class ProgHandler():
         for i in xrange(1,n):
             _newx += param[i] * np.power(x, i)
         #print x, _newx
+        #save things
         _tofile = np.column_stack((x, _newx))
-        #print _tofile
-        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/testaxis.txt'
+        filepath = self.workspace + 'calibrated_wavelength.txt'
         self.myIo.write_nparray_txt(filepath, _tofile)
         
     def calibrate_wavelength_auto(self):
@@ -124,7 +132,7 @@ class ProgHandler():
         #print x, _newx
         _tofile = np.column_stack((x, _newx))
         #print _tofile
-        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/testaxis.txt'
+        filepath = self.workspace + 'auto_calibrated_wavelength.txt'
         self.myIo.write_nparray_txt(filepath, _tofile)
         
         

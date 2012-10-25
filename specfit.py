@@ -13,6 +13,7 @@ import Fittergui
 import rnio
 import proghandler
 import Plotterui
+import Config
 
 class specfit(QtGui.QMainWindow):
     """ Guihandler for all of the specfit program
@@ -29,23 +30,9 @@ class specfit(QtGui.QMainWindow):
         self.show()
         self.ph = proghandler.ProgHandler()
         self.myIo = rnio.RnIo()
+        self.config = Config.Config()
+        self.get_settings()
         
-        #just for testing purposes
-        #filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/spectrum1.prf'
-        filepath = 'C:/Python/SpyDev/Specfit/testdata/spectrum1.prf'
-        arr = self.myIo.read_prf_nparray(filepath)
-        self.ph.set_spectrum(arr)
-        #only for testing!!!
-        #filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/Peaklist.dat'
-        filepath = 'C:/Python/SpyDev/Specfit/testdata/Peaklist.dat'
-        arr = self.myIo.read_originPeaklist_nparray(filepath)
-        self.ph.set_peaklist(arr)
-        
-        #resize column width
-        self.ui.Peaklist_Table.resizeColumnsToContents()
-        
-        #just for peakdetect test
-        self.ph.detect_peaks()
         
     """
     def openWidgetWindow(self, parent = None):
@@ -54,6 +41,47 @@ class specfit(QtGui.QMainWindow):
         wui.setupUi(self)
         self.show()
     """
+    
+    def get_settings(self):
+        """ Get settings from settings.ini file and sets them
+        
+        """
+        self.sdict = self.config.getConfigOptions('Specfit')
+        #set spectrum
+        _flag = False
+        try:
+            _filepath = self.sdict['spectrum']
+            arr = self.myIo.read_prf_nparray(_filepath)
+            self.ph.set_spectrum(arr)
+        except (KeyError, IOError, TypeError):
+            self.open_spectrum()
+            _flag = True
+        #set peaklist
+        try:
+            _filepath = self.sdict['peaklist']
+            arr = self.myIo.read_originPeaklist_nparray(_filepath)
+            self.ph.set_peaklist(arr)
+        except (KeyError, IOError, TypeError):
+            self.open_peaklist()
+            _flag = True
+        #set workspace
+        try:
+            _filepath = self.sdict['workspace']
+            self.ph.set_workspace(_filepath)
+        except (KeyError, TypeError):
+            self.set_workspace()
+            _flag = True
+        #write settings if neccessary
+        if _flag == True:
+            self.write_settings()
+        
+    def write_settings(self):
+        """ writes settings dictionary to settings.ini file
+        
+        """
+        self.config.writeConfigOptions('Specfit', self.sdict)
+        
+
         
     def open_spectrum(self):
         """ Open a spectrum file
@@ -61,13 +89,18 @@ class specfit(QtGui.QMainWindow):
         """
         #get file dialog
         _msg = 'Select a spectrum file to open'
-        _prepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/'
+        try:
+            _prepath = self.sdict['spectrum']
+        except (KeyError):
+            _prepath = 'C:/'
         _Imagetypes = 'Spectrums (*.prf *.txt)'
         filepath = QtGui.QFileDialog.getOpenFileName(self, 
                                                       _msg,
                                                       _prepath, 
                                                       _Imagetypes)
         filepath = str(filepath)
+        self.sdict['spectrum'] = filepath
+        self.write_settings()
         #print filepath
         
         #finde dateiendung
@@ -84,8 +117,6 @@ class specfit(QtGui.QMainWindow):
         #set sepectrum for program
         self.ph.set_spectrum(arr)
         
-        #show file on gui
-        self.ui.Spectrum_label.setText(filepath)
     
     def open_peaklist(self):
         """ Open a peaklist file
@@ -93,13 +124,18 @@ class specfit(QtGui.QMainWindow):
         """
         #get file dialog
         _msg = 'Select a peaklist to open'
-        _prepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/'
+        try:
+            _prepath = self.sdict['peaklist']
+        except (KeyError):
+            _prepath = 'C:/'
         _Imagetypes = 'Peaklist (*.dat *.txt)'
         filepath = QtGui.QFileDialog.getOpenFileName(self, 
                                                       _msg,
                                                       _prepath, 
                                                       _Imagetypes)
         filepath = str(filepath)
+        self.sdict['peaklist'] = filepath
+        self.write_settings()
         #print filepath
         
         #open peaklist
@@ -108,6 +144,23 @@ class specfit(QtGui.QMainWindow):
         #set peaklist for program
         self.ph.set_peaklist(arr)
         self.populate_peaklistTable()
+        
+    def set_workspace(self):
+        """ Set the workspace folder
+        
+        """
+        #get directory dialog
+        _msg = 'Select a working directory'
+        try:
+            _prepath = self.sdict['workspace']
+        except (KeyError):
+            _prepath = 'C:/'
+        filepath = QtGui.QFileDialog.getExistingDirectory(self, _msg, _prepath)
+        filepath += '/'
+        self.sdict['workspace'] = filepath
+        self.ph.set_workspace(filepath)
+        self.write_settings()
+        
         
     def populate_peaklistTable(self):
         """ Populate the peaklist table with peaks

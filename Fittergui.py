@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Fittergui.ui'
 #
-# Created: Thu Oct 25 19:08:24 2012
+# Created: Thu Oct 25 21:43:51 2012
 #      by: PyQt4 UI code generator 4.9.5
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,18 +23,6 @@ class Ui_Specfit(object):
         self.OpenSpectrum_pushButton = QtGui.QPushButton(self.centralwidget)
         self.OpenSpectrum_pushButton.setGeometry(QtCore.QRect(20, 40, 111, 21))
         self.OpenSpectrum_pushButton.setObjectName(_fromUtf8("OpenSpectrum_pushButton"))
-        self.Spectrum_label = QtGui.QLabel(self.centralwidget)
-        self.Spectrum_label.setGeometry(QtCore.QRect(170, 30, 551, 31))
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Spectrum_label.sizePolicy().hasHeightForWidth())
-        self.Spectrum_label.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily(_fromUtf8("Arial"))
-        font.setPointSize(12)
-        self.Spectrum_label.setFont(font)
-        self.Spectrum_label.setObjectName(_fromUtf8("Spectrum_label"))
         self.OpenPeaklist_pushButton = QtGui.QPushButton(self.centralwidget)
         self.OpenPeaklist_pushButton.setGeometry(QtCore.QRect(20, 10, 111, 21))
         self.OpenPeaklist_pushButton.setObjectName(_fromUtf8("OpenPeaklist_pushButton"))
@@ -78,6 +66,9 @@ class Ui_Specfit(object):
         self.fitPeaksAutomatic_pushButton.setGeometry(QtCore.QRect(10, 130, 131, 23))
         self.fitPeaksAutomatic_pushButton.setObjectName(_fromUtf8("fitPeaksAutomatic_pushButton"))
         self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
+        self.SetWorkspace_pushButton = QtGui.QPushButton(self.centralwidget)
+        self.SetWorkspace_pushButton.setGeometry(QtCore.QRect(20, 70, 111, 21))
+        self.SetWorkspace_pushButton.setObjectName(_fromUtf8("SetWorkspace_pushButton"))
         Specfit.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(Specfit)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -94,12 +85,12 @@ class Ui_Specfit(object):
         QtCore.QObject.connect(self.Plotter_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.plot_things)
         QtCore.QObject.connect(self.FitPeaksManual_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.fit_peaks_manual)
         QtCore.QObject.connect(self.fitPeaksAutomatic_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.fit_peaks_automatic)
+        QtCore.QObject.connect(self.SetWorkspace_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.set_workspace)
         QtCore.QMetaObject.connectSlotsByName(Specfit)
 
     def retranslateUi(self, Specfit):
         Specfit.setWindowTitle(QtGui.QApplication.translate("Specfit", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
         self.OpenSpectrum_pushButton.setText(QtGui.QApplication.translate("Specfit", "Open Spectrum", None, QtGui.QApplication.UnicodeUTF8))
-        self.Spectrum_label.setText(QtGui.QApplication.translate("Specfit", "Spektrum", None, QtGui.QApplication.UnicodeUTF8))
         self.OpenPeaklist_pushButton.setText(QtGui.QApplication.translate("Specfit", "Open Peaklist", None, QtGui.QApplication.UnicodeUTF8))
         self.Plotter_pushButton.setText(QtGui.QApplication.translate("Specfit", "Plot things", None, QtGui.QApplication.UnicodeUTF8))
         item = self.Peaklist_Table.horizontalHeaderItem(0)
@@ -114,6 +105,7 @@ class Ui_Specfit(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("Specfit", "Manual fit", None, QtGui.QApplication.UnicodeUTF8))
         self.fitPeaksAutomatic_pushButton.setText(QtGui.QApplication.translate("Specfit", "Calculate Wavelength", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("Specfit", "Automatic fit", None, QtGui.QApplication.UnicodeUTF8))
+        self.SetWorkspace_pushButton.setText(QtGui.QApplication.translate("Specfit", "Set Workspace", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":

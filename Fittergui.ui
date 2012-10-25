@@ -27,31 +27,6 @@
      <string>Open Spectrum</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Spectrum_label">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>30</y>
-      <width>551</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Spektrum</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="OpenPeaklist_pushButton">
     <property name="geometry">
      <rect>
@@ -175,6 +150,19 @@
      </widget>
     </widget>
    </widget>
+   <widget class="QPushButton" name="SetWorkspace_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set Workspace</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -270,6 +258,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>SetWorkspace_pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Specfit</receiver>
+   <slot>set_workspace()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>82</x>
+     <y>104</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>132</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open_spectrum()</slot>
@@ -277,5 +281,6 @@
   <slot>fit_peaks_manual()</slot>
   <slot>plot_things()</slot>
   <slot>fit_peaks_automatic()</slot>
+  <slot>set_workspace()</slot>
  </slots>
 </ui>
