@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'Fittergui.ui'
 #
-# Created: Thu Oct 25 14:19:19 2012
-#      by: PyQt4 UI code generator 4.9.4
+# Created: Thu Oct 25 19:08:24 2012
+#      by: PyQt4 UI code generator 4.9.5
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -41,9 +41,6 @@ class Ui_Specfit(object):
         self.Plotter_pushButton = QtGui.QPushButton(self.centralwidget)
         self.Plotter_pushButton.setGeometry(QtCore.QRect(30, 500, 111, 21))
         self.Plotter_pushButton.setObjectName(_fromUtf8("Plotter_pushButton"))
-        self.FitPeaks_pushButton = QtGui.QPushButton(self.centralwidget)
-        self.FitPeaks_pushButton.setGeometry(QtCore.QRect(40, 290, 75, 23))
-        self.FitPeaks_pushButton.setObjectName(_fromUtf8("FitPeaks_pushButton"))
         self.Peaklist_Table = QtGui.QTableWidget(self.centralwidget)
         self.Peaklist_Table.setGeometry(QtCore.QRect(350, 30, 391, 521))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
@@ -66,6 +63,21 @@ class Ui_Specfit(object):
         self.Peaklist_Table.horizontalHeader().setHighlightSections(False)
         self.Peaklist_Table.horizontalHeader().setMinimumSectionSize(19)
         self.Peaklist_Table.horizontalHeader().setSortIndicatorShown(False)
+        self.tabWidget = QtGui.QTabWidget(self.centralwidget)
+        self.tabWidget.setGeometry(QtCore.QRect(20, 140, 261, 191))
+        self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName(_fromUtf8("tab"))
+        self.FitPeaksManual_pushButton = QtGui.QPushButton(self.tab)
+        self.FitPeaksManual_pushButton.setGeometry(QtCore.QRect(10, 10, 121, 23))
+        self.FitPeaksManual_pushButton.setObjectName(_fromUtf8("FitPeaksManual_pushButton"))
+        self.tabWidget.addTab(self.tab, _fromUtf8(""))
+        self.tab_2 = QtGui.QWidget()
+        self.tab_2.setObjectName(_fromUtf8("tab_2"))
+        self.fitPeaksAutomatic_pushButton = QtGui.QPushButton(self.tab_2)
+        self.fitPeaksAutomatic_pushButton.setGeometry(QtCore.QRect(10, 130, 131, 23))
+        self.fitPeaksAutomatic_pushButton.setObjectName(_fromUtf8("fitPeaksAutomatic_pushButton"))
+        self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
         Specfit.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(Specfit)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -76,10 +88,12 @@ class Ui_Specfit(object):
         Specfit.setStatusBar(self.statusbar)
 
         self.retranslateUi(Specfit)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.OpenPeaklist_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.open_peaklist)
         QtCore.QObject.connect(self.OpenSpectrum_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.open_spectrum)
         QtCore.QObject.connect(self.Plotter_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.plot_things)
-        QtCore.QObject.connect(self.FitPeaks_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.fit_peaks)
+        QtCore.QObject.connect(self.FitPeaksManual_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.fit_peaks_manual)
+        QtCore.QObject.connect(self.fitPeaksAutomatic_pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Specfit.fit_peaks_automatic)
         QtCore.QMetaObject.connectSlotsByName(Specfit)
 
     def retranslateUi(self, Specfit):
@@ -88,7 +102,6 @@ class Ui_Specfit(object):
         self.Spectrum_label.setText(QtGui.QApplication.translate("Specfit", "Spektrum", None, QtGui.QApplication.UnicodeUTF8))
         self.OpenPeaklist_pushButton.setText(QtGui.QApplication.translate("Specfit", "Open Peaklist", None, QtGui.QApplication.UnicodeUTF8))
         self.Plotter_pushButton.setText(QtGui.QApplication.translate("Specfit", "Plot things", None, QtGui.QApplication.UnicodeUTF8))
-        self.FitPeaks_pushButton.setText(QtGui.QApplication.translate("Specfit", "Fit Peaks", None, QtGui.QApplication.UnicodeUTF8))
         item = self.Peaklist_Table.horizontalHeaderItem(0)
         item.setText(QtGui.QApplication.translate("Specfit", "Fit?", None, QtGui.QApplication.UnicodeUTF8))
         item = self.Peaklist_Table.horizontalHeaderItem(1)
@@ -97,6 +110,10 @@ class Ui_Specfit(object):
         item.setText(QtGui.QApplication.translate("Specfit", "Intensitaet", None, QtGui.QApplication.UnicodeUTF8))
         item = self.Peaklist_Table.horizontalHeaderItem(3)
         item.setText(QtGui.QApplication.translate("Specfit", "Pixel guess", None, QtGui.QApplication.UnicodeUTF8))
+        self.FitPeaksManual_pushButton.setText(QtGui.QApplication.translate("Specfit", "Fit wavelength", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("Specfit", "Manual fit", None, QtGui.QApplication.UnicodeUTF8))
+        self.fitPeaksAutomatic_pushButton.setText(QtGui.QApplication.translate("Specfit", "Calculate Wavelength", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("Specfit", "Automatic fit", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":

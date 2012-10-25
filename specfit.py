@@ -31,11 +31,13 @@ class specfit(QtGui.QMainWindow):
         self.myIo = rnio.RnIo()
         
         #just for testing purposes
-        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/spectrum1.prf'
+        #filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/spectrum1.prf'
+        filepath = 'C:/Python/SpyDev/Specfit/testdata/spectrum1.prf'
         arr = self.myIo.read_prf_nparray(filepath)
         self.ph.set_spectrum(arr)
         #only for testing!!!
-        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/Peaklist.dat'
+        #filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/Peaklist.dat'
+        filepath = 'C:/Python/SpyDev/Specfit/testdata/Peaklist.dat'
         arr = self.myIo.read_originPeaklist_nparray(filepath)
         self.ph.set_peaklist(arr)
         
@@ -139,11 +141,11 @@ class specfit(QtGui.QMainWindow):
             
             #_tw.setCellWidget(i, 1, _wl)
             #_tw.setCellWidget(i, 2, _int)
-            _tmp = _tw.item(i, 1)
+            #_tmp = _tw.item(i, 1)
             #print _tmp
-            _tmp2 = _tmp.data(0)
+            #_tmp2 = _tmp.data(0)
             #print _tmp2
-            _tmp3 = _tmp2.toFloat()[0]
+            #_tmp3 = _tmp2.toFloat()[0]
             #print _tmp3
         _tw.resizeColumnsToContents()
         
@@ -167,7 +169,7 @@ class specfit(QtGui.QMainWindow):
         
         
             
-    def fit_peaks(self):
+    def fit_peaks_manual(self):
         """ Fit peaks to the spectrum
         
         """
@@ -180,6 +182,13 @@ class specfit(QtGui.QMainWindow):
         self.sdict['End_nm'] = _tmp
         """
         self.ph.calibrate_wavelength()
+        
+    def fit_peaks_automatic(self):
+        """ Fit peaks and detect peaks automatically
+        
+        """
+        self.ph.peaklist = self.get_peaks_forfit()
+        self.ph.calibrate_wavelength_auto()
         
         
         

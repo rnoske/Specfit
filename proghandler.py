@@ -2,7 +2,7 @@
 
 #Programm Handler!
 #standard library imports
-
+import logging
 
 #related third party imports
 import numpy as np
@@ -89,8 +89,51 @@ class ProgHandler():
         filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/testaxis.txt'
         self.myIo.write_nparray_txt(filepath, _tofile)
         
-    def detect_peaks(self):
+    def calibrate_wavelength_auto(self):
+        """ Calibrate Wavelength with automatic peak detection
+        
+        """
+        _pl = self.peaklist
+        _peaks = self.detect_peaks(len(_pl))
+        if len(_pl) != len(_peaks):
+            logging.error('peaklist longer than detected peaks!')
+        #fitting
+        _peaks = np.array(_peaks)
+        b = 0.
+        m = _peaks[:,0]
+        a = _peaks[:,1]
+        s = [2] * len(_pl)
+        n = len(_pl) #number of gauss functions to fit
+        y = self.spectrum[:, 1]
+        x = self.spectrum[:, 0]
+        
+        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, plotflag = False)
+        b,a,m,s = param
+        #print b, a, m, s
+        n = 3
+        p = [1] * n
+        _wl = []
+        for i in xrange(len(_pl)):
+            _wl.append(_pl[i][0])
+        param = self.fitter.polynom(m, _wl, n, p, plotflag = False)
+        #print param
+        print str(param[0]) + ' + ' +str(param[1]) + '*x' + ' + ' + str(param[2])+'x^2'
+        _newx = param[0]
+        for i in xrange(1,n):
+            _newx += param[i] * np.power(x, i)
+        #print x, _newx
+        _tofile = np.column_stack((x, _newx))
+        #print _tofile
+        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/testaxis.txt'
+        self.myIo.write_nparray_txt(filepath, _tofile)
+        
+        
+        
+        
+    def detect_peaks(self, max_n_peaks = 6):
         """ Detect maxima in given data
+        
+        max_n_peaks (int): maximum number of peaks that shuld be returned
         
         """
         y = self.spectrum[:, 1]
@@ -99,13 +142,20 @@ class ProgHandler():
         #look for maxima
         max_peaks, min_peaks = peakdetect.peakdetect(y, x, lookahead= 5, delta = 0)
         peaks = []
-        threshold = 10000
+        threshold = 1000
         for peak in max_peaks:
             if peak[1] > threshold:
                 peaks.append(peak)
+        
+        while len(peaks) > max_n_peaks:
+            threshold += 1
+            peaks = []
+            for peak in max_peaks:
+                if peak[1] > threshold:
+                    peaks.append(peak)
             
-        print len(peaks)
-        print peaks
+            
+        return peaks
         
 
         
