@@ -31,13 +31,16 @@ class specfit(QtGui.QMainWindow):
         self.myIo = rnio.RnIo()
         
         #just for testing purposes
-        filepath = 'C:/Python/SpyDev/Specfit/testdata/spectrum1.prf'
+        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/spectrum1.prf'
         arr = self.myIo.read_prf_nparray(filepath)
         self.ph.set_spectrum(arr)
         #only for testing!!!
-        filepath = 'C:/Python/SpyDev/Specfit/testdata/Peaklist.dat'
+        filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/Peaklist.dat'
         arr = self.myIo.read_originPeaklist_nparray(filepath)
         self.ph.set_peaklist(arr)
+        
+        #resize column width
+        self.ui.Peaklist_Table.resizeColumnsToContents()
         
     """
     def openWidgetWindow(self, parent = None):
@@ -99,18 +102,81 @@ class specfit(QtGui.QMainWindow):
         
         #set peaklist for program
         self.ph.set_peaklist(arr)
-    
+        self.populate_peaklistTable()
+        
+    def populate_peaklistTable(self):
+        """ Populate the peaklist table with peaks
+        
+        """
+        _pl = self.ph.peaklist
+        _tw = self.ui.Peaklist_Table
+        
+        _tw.setRowCount(len(_pl))
+        _tw.horizontalHeader().setStretchLastSection(False)
+        for i in xrange(len(_pl)):
+            #fit checkbox
+            _cb = QtGui.QCheckBox()
+            _cb.setCheckState(0)
+            _tw.setCellWidget(i, 0, _cb)
+            
+            #Wavelength entry
+            _val = float(_pl[i, 0]) #ädata to be displayed
+            _val = QtCore.QVariant(_val) #convert to QVariant
+            item = QtGui.QTableWidgetItem(0) #ka wofür die 0 ist
+            item.setData(0, _val) #0=data #set Vairant data to tableitem
+            _tw.setItem(i,1,item) #place item in table
+            
+            #Intensity entry
+            _val = float(_pl[i, 1]) #ädata to be displayed
+            _val = QtCore.QVariant(_val) #convert to QVariant
+            item = QtGui.QTableWidgetItem(0) #ka wofür die 0 ist
+            item.setData(0, _val) #0=data #set Vairant data to tableitem
+            _tw.setItem(i,2,item) #place item in table
+            
+            
+            #_tw.setCellWidget(i, 1, _wl)
+            #_tw.setCellWidget(i, 2, _int)
+            _tmp = _tw.item(i, 1)
+            #print _tmp
+            _tmp2 = _tmp.data(0)
+            #print _tmp2
+            _tmp3 = _tmp2.toFloat()[0]
+            #print _tmp3
+        _tw.resizeColumnsToContents()
+        
+    def get_peaks_forfit(self):
+        """ Get the peaks for fitting
+        
+        """
+        _tw = self.ui.Peaklist_Table
+        _n_entrys = _tw.rowCount()
+        _pl = []
+        for i in xrange(_n_entrys):
+            if _tw.cellWidget(i, 0).checkState() == 2:
+                _wl = _tw.item(i,1).data(0).toFloat()[0]
+                _int = _tw.item(i,2).data(0).toFloat()[0]
+                try:
+                    _pxg = _tw.item(i,3).data(0).toFloat()[0]
+                except AttributeError:
+                    _pxg = 0.0
+                _pl.append([_wl, _int, _pxg])
+        return _pl
+        
+        
+            
     def fit_peaks(self):
         """ Fit peaks to the spectrum
         
+        """
+        self.ph.peaklist = self.get_peaks_forfit()
         """
         self.sdict = {}
         _tmp = self.ui.Start_nm_doubleSpinBox.value()
         self.sdict['Start_nm'] = _tmp
         _tmp = self.ui.End_nm_doubleSpinBox.value()
         self.sdict['End_nm'] = _tmp
-        
-        self.ph.calibrate_wavelength(self.sdict)
+        """
+        self.ph.calibrate_wavelength()
         
         
         

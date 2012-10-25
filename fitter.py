@@ -151,6 +151,7 @@ class Fitter():
         return np.array(gauss)
         """
         return b+a*np.exp(-((x-m)/s)**2)
+        
       
     def multi_gauss_fit(self, x, y, n, b, a, m, s, plotflag = True):
         """ Fit n Gauss functions do data
@@ -177,27 +178,27 @@ class Fitter():
             b, a, m, s
             
         """    
+        """
         _a = np.arange(n)
         _m = np.arange(n)
         _s = np.arange(n)
+        """
         def res(p, y, x):
             #initialisation of paramters
             b = p[0]
-            """
-            a = np.arange(n)
-            m = np.arange(n)
-            s = np.arange(n)
-            """
+            a = []
+            m = []
+            s = []
             for i in xrange(n):
-                _a[i] = (p[i+1]) #+1 because 0 is offset b
-                _m[i] = (p[i+1+n]) #3 because 3 params
-                _s[i] = (p[i+1+(2*n)])
+                a.append(p[i+1]) #+1 because 0 is offset b
+                m.append(p[i+1+n]) #3 because 3 params
+                s.append(p[i+1+(2*n)])
                 #print a, m, s
               
             #generation fit function
-            y_fit = self.gauss(x, b, _a[0], _m[0], _s[0])
+            y_fit = self.gauss(x, b, a[0], m[0], s[0])
             for i in xrange(1,n):
-                y_fit += self.gauss(x, b, _a[i], _m[i], _s[i])
+                y_fit += self.gauss(x, b, a[i], m[i], s[i])
             err = y - y_fit
             return err
         #parameter magic, notwendig um paramter für leastsq zu bekommen
@@ -210,7 +211,7 @@ class Fitter():
         for item in s:
             p.append(item)
         p = np.array(p)
-        param, success = leastsq(res, p, args = (y, x)) #, maxfev=1000
+        param, success = leastsq(res, p, args = (y, x))
         #print param
         
         #result function
@@ -238,6 +239,37 @@ class Fitter():
         
         return b, a, m, s
         
+    def polynom(self, x, y, n, p, plotflag = True):
+        """ Fit a polynom to the given data
+        
+        x (np.array): numpy array with x-axis
+        y (np.array): numpy array with data
+        n (int): order of polynom to fit
+        p (np.array): numpy array of initial parameter values (len(p) = n)
+        
+        """
+        def res(p, y ,x):
+            model = p[0]
+            for i in xrange(1, n):
+                model += p[i] * np.power(x, i)
+            err = y - model
+            return err
+            
+        param, success = leastsq(res, p, args = (y, x))
+        #print param
+        
+        #plotting
+        if plotflag == True:
+            #generation fit function
+            y_est = param[0]
+            for i in xrange(1,n):
+                y_est += param[i] * np.power(x, i)
+            
+            plt.plot(x, y, label='Real Data')
+            plt.plot(x, y_est, 'g.', label='Fitted')
+            plt.legend()
+            plt.show()
+        return param
 
         
 if __name__ == "__main__":

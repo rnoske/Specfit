@@ -78,108 +78,6 @@
      <string>Plot things</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>160</y>
-      <width>221</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Guess Spectrum boundaries:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>190</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Start nm</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>220</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>End nm</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="Start_nm_doubleSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>190</y>
-      <width>91</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="decimals">
-     <number>4</number>
-    </property>
-    <property name="maximum">
-     <double>10000.000000000000000</double>
-    </property>
-    <property name="value">
-     <double>380.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="End_nm_doubleSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>220</y>
-      <width>91</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="decimals">
-     <number>4</number>
-    </property>
-    <property name="maximum">
-     <double>10000.000000000000000</double>
-    </property>
-    <property name="value">
-     <double>620.000000000000000</double>
-    </property>
-   </widget>
    <widget class="QPushButton" name="FitPeaks_pushButton">
     <property name="geometry">
      <rect>
@@ -193,20 +91,38 @@
      <string>Fit Peaks</string>
     </property>
    </widget>
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QTableWidget" name="Peaklist_Table">
     <property name="geometry">
      <rect>
       <x>350</x>
       <y>30</y>
-      <width>271</width>
-      <height>251</height>
+      <width>391</width>
+      <height>521</height>
      </rect>
     </property>
-    <row>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <attribute name="horizontalHeaderCascadingSectionResizes">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderHighlightSections">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderMinimumSectionSize">
+     <number>19</number>
+    </attribute>
+    <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+     <bool>false</bool>
+    </attribute>
+    <column>
      <property name="text">
-      <string>bla</string>
+      <string>Fit?</string>
      </property>
-    </row>
+    </column>
     <column>
      <property name="text">
       <string>Wellenlaenge</string>
@@ -217,16 +133,11 @@
       <string>Intensitaet</string>
      </property>
     </column>
-    <item row="0" column="0">
+    <column>
      <property name="text">
-      <string>123</string>
+      <string>Pixel guess</string>
      </property>
-    </item>
-    <item row="0" column="1">
-     <property name="text">
-      <string>456</string>
-     </property>
-    </item>
+    </column>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
