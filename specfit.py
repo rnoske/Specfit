@@ -42,6 +42,9 @@ class specfit(QtGui.QMainWindow):
         #resize column width
         self.ui.Peaklist_Table.resizeColumnsToContents()
         
+        #just for peakdetect test
+        self.ph.detect_peaks()
+        
     """
     def openWidgetWindow(self, parent = None):
         QtGui.QWidget.__init__(self, parent)

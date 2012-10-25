@@ -10,6 +10,7 @@ import numpy as np
 #local application/library specific imports
 import rnio
 import fitter
+import peakdetect
 
 
 class ProgHandler():
@@ -88,6 +89,23 @@ class ProgHandler():
         filepath = 'D:/Raimund Buero/Python/SpyDev/Specfit/testdata/testaxis.txt'
         self.myIo.write_nparray_txt(filepath, _tofile)
         
+    def detect_peaks(self):
+        """ Detect maxima in given data
+        
+        """
+        y = self.spectrum[:, 1]
+        x = self.spectrum[:, 0]
+        
+        #look for maxima
+        max_peaks, min_peaks = peakdetect.peakdetect(y, x, lookahead= 5, delta = 0)
+        peaks = []
+        threshold = 10000
+        for peak in max_peaks:
+            if peak[1] > threshold:
+                peaks.append(peak)
+            
+        print len(peaks)
+        print peaks
         
 
         
