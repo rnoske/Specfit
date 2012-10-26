@@ -11,6 +11,7 @@ import numpy as np
 import rnio
 import fitter
 import peakdetect
+import Config
 
 
 class ProgHandler():
@@ -23,6 +24,8 @@ class ProgHandler():
         """
         self.myIo = rnio.RnIo()
         self.fitter = fitter.Fitter()
+        self.config = Config.Config()
+        self.fdict = self.config.getConfigOptions('fit')
         
     def set_spectrum(self, nparray):
         """ Sets a spectrum file on which work is done
@@ -72,20 +75,23 @@ class ProgHandler():
         
         m = _gpx
         #print m
-        s = [2]*n
+        s = [float(self.fdict['inital_s'])]*n
         
         #only for testing!
-        m = [96, 111, 233, 712, 847, 856]
+        #m = [96, 111, 233, 712, 847, 856]
         
         a = []
         for i in xrange(len(m)):
             a.append(y[m[i]])
-        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, plotflag = False)
+        _sp = self.workspace + 'manual_multi_gauss_fit.jpg'
+        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, 
+                                            plotflag = True, filepath = _sp)
         b,a,m,s = param
         #print b, a, m, s
         n = 3
         p = [1] * n
-        param = self.fitter.polynom(m, _wl, n, p, plotflag = False)
+        _sp = self.workspace + 'manual_fit_polynom.jpg'
+        param = self.fitter.polynom(m, _wl, n, p, plotflag = True, filepath = _sp)
         #print param
         print str(param[0]) + ' + ' +str(param[1]) + '*x' + ' + ' + str(param[2])+'x^2'
         _newx = param[0]
@@ -94,7 +100,7 @@ class ProgHandler():
         #print x, _newx
         #save things
         _tofile = np.column_stack((x, _newx))
-        filepath = self.workspace + 'calibrated_wavelength.txt'
+        filepath = self.workspace + 'manual_calibrated_wavelength.txt'
         self.myIo.write_nparray_txt(filepath, _tofile)
         
     def calibrate_wavelength_auto(self):
@@ -115,7 +121,9 @@ class ProgHandler():
         y = self.spectrum[:, 1]
         x = self.spectrum[:, 0]
         
-        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, plotflag = False)
+        _sp = self.workspace + 'auto_multi_gauss_fit.jpg'
+        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, 
+                                            plotflag = True, filepath = _sp)
         b,a,m,s = param
         #print b, a, m, s
         n = 3
@@ -123,7 +131,8 @@ class ProgHandler():
         _wl = []
         for i in xrange(len(_pl)):
             _wl.append(_pl[i][0])
-        param = self.fitter.polynom(m, _wl, n, p, plotflag = False)
+        _sp = self.workspace + 'auto_fit_polynom.jpg'
+        param = self.fitter.polynom(m, _wl, n, p, plotflag = True, filepath = _sp)
         #print param
         print str(param[0]) + ' + ' +str(param[1]) + '*x' + ' + ' + str(param[2])+'x^2'
         _newx = param[0]

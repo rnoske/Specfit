@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>548</width>
+    <height>676</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,8 +43,8 @@
    <widget class="QPushButton" name="Plotter_pushButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>500</y>
+      <x>20</x>
+      <y>330</y>
       <width>111</width>
       <height>21</height>
      </rect>
@@ -56,10 +56,10 @@
    <widget class="QTableWidget" name="Peaklist_Table">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>30</y>
+      <x>150</x>
+      <y>0</y>
       <width>391</width>
-      <height>521</height>
+      <height>641</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -101,55 +101,6 @@
      </property>
     </column>
    </widget>
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>140</y>
-      <width>261</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>1</number>
-    </property>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Manual fit</string>
-     </attribute>
-     <widget class="QPushButton" name="FitPeaksManual_pushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>121</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Fit wavelength</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Automatic fit</string>
-     </attribute>
-     <widget class="QPushButton" name="fitPeaksAutomatic_pushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>130</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Calculate Wavelength</string>
-      </property>
-     </widget>
-    </widget>
-   </widget>
    <widget class="QPushButton" name="SetWorkspace_pushButton">
     <property name="geometry">
      <rect>
@@ -163,13 +114,39 @@
      <string>Set Workspace</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="fitPeaksAutomatic_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>260</y>
+      <width>131</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Automatic fit wavelength</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FitPeaksManual_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>220</y>
+      <width>131</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Manual fit wavelength</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>548</width>
      <height>21</height>
     </rect>
    </property>
@@ -234,7 +211,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>119</x>
-     <y>204</y>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
      <x>113</x>
@@ -250,7 +227,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>95</x>
-     <y>321</y>
+     <y>403</y>
     </hint>
     <hint type="destinationlabel">
      <x>94</x>

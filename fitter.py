@@ -153,7 +153,7 @@ class Fitter():
         return b+a*np.exp(-((x-m)/s)**2)
         
       
-    def multi_gauss_fit(self, x, y, n, b, a, m, s, plotflag = True):
+    def multi_gauss_fit(self, x, y, n, b, a, m, s, plotflag = True, filepath = ''):
         """ Fit n Gauss functions do data
         
         x (np.array): numpy array with x-axis
@@ -166,6 +166,7 @@ class Fitter():
                     gauss fit
         s (np.array): array of standard deviations
         plotflag (bool): if true an graph is plottet
+        filepath (str): complete filepath to save the figure if plotflag = True
         
         Example:
             n = 2
@@ -232,20 +233,29 @@ class Fitter():
             for i in xrange(1,n):
                 y_est += self.gauss(x, b, a[i], m[i], s[i])
             
+            plt.clf()
             plt.plot(x, y, label='Real Data')
             plt.plot(x, y_est, 'g.', label='Fitted')
             plt.legend()
-            plt.show()
+            
+            if filepath != '':
+                try:
+                    plt.savefig(filepath)
+                except:
+                    plt.show
+            #plt.show()
         
         return b, a, m, s
         
-    def polynom(self, x, y, n, p, plotflag = True):
+    def polynom(self, x, y, n, p, plotflag = True, filepath = ''):
         """ Fit a polynom to the given data
         
         x (np.array): numpy array with x-axis
         y (np.array): numpy array with data
         n (int): order of polynom to fit
         p (np.array): numpy array of initial parameter values (len(p) = n)
+        plotflag (bool): if true an graph is plottet
+        filepath (str): complete filepath to save the figure if plotflag = True
         
         """
         def res(p, y ,x):
@@ -265,10 +275,16 @@ class Fitter():
             for i in xrange(1,n):
                 y_est += param[i] * np.power(x, i)
             
+            plt.clf()
             plt.plot(x, y, label='Real Data')
             plt.plot(x, y_est, 'g.', label='Fitted')
             plt.legend()
-            plt.show()
+            if filepath != '':
+                try:
+                    plt.savefig(filepath)
+                except:
+                    plt.show
+            #plt.show()
         return param
 
         

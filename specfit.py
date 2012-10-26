@@ -7,6 +7,7 @@ import sys
 
 #related third party imports
 from PyQt4 import QtGui, QtCore
+import numpy as np
 
 #local application/library specific imports
 import Fittergui
@@ -261,8 +262,8 @@ class specfit(QtGui.QMainWindow):
         # checked = 2 unchecked = 0
         if self.pui.check_rawData.checkState() == 2:
             self.plot_spectrum()
-        elif self.pui.check_peaklist.checkState() == 2:
-            self.plot_peaklist()
+        elif self.pui.check_spectrumlog.checkState() ==2:
+            self.plot_spectrumlog()
         else:
             self.test_plotter()
             
@@ -294,6 +295,21 @@ class specfit(QtGui.QMainWindow):
         _y = _arr[:,1]
         self.updatePlot(_x,_y)
         
+    def plot_spectrumlog(self):
+        """ Plot the spectrum with logarytmic y- axis
+        
+        """
+        try:
+            _arr = self.ph.spectrum
+        except NameError:
+            logging.error('Spectrum file nicht gesetzt')
+        
+        _x = _arr[:,0]
+        _y = _arr[:,1]
+        _y = np.log10(_y)
+        self.updatePlot(_x,_y)
+        
+        
     def plot_peaklist(self):
         """ Plot peaklist
         
@@ -302,6 +318,9 @@ class specfit(QtGui.QMainWindow):
             _arr = self.ph.peaklist
         except NameError:
             logging.error('Spectrum file nicht gesetzt')
+        _arr  = np.array(_arr)
+        print _arr
+        print _arr.shape
         
         _x = _arr[:,0]
         _y = _arr[:,1]
