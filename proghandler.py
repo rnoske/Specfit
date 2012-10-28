@@ -183,10 +183,16 @@ class ProgHandler():
         for i in xrange(n):
             params.add('m_'+str(i))
             params['m_'+str(i)].value = m[i]
+            params['m_'+str(i)].min = m[i] - float(self.fdict['m_pm'])
+            params['m_'+str(i)].max = m[i] + float(self.fdict['m_pm'])
             params.add('a_'+str(i))
             params['a_'+str(i)].value = a[i]
+            params['a_'+str(i)].min = float(self.fdict['a_min'])
             params.add('s_'+str(i))
             params['s_'+str(i)].value= s[i]
+            params['s_'+str(i)].min = s[i] - float(self.fdict['s_pm'])
+            params['s_'+str(i)].max = s[i] + float(self.fdict['s_pm'])
+        #print params
         #fit
         params, fit = self.fitter.multi_gauss_fit_bounds(x, y, n, params,
                                                               plotflag = False)
@@ -194,15 +200,16 @@ class ProgHandler():
         #save results
         data = np.column_stack((x, y, fit))
         data_log = np.column_stack((x, np.log10(y), np.log10(fit)))
-        if peakguess == 0:
+        _header = [['Pixel', 'Original Data', 'fitted Data']]
+        if peakguess == 0:   
             self.data['manual_gauss_fit'] = data
             filepath = self.workspace + 'manual_multi_gauss_fit.txt'
-            self.myIo.write_nparray_txt(filepath, data)
+            self.myIo.write_nparray_txt(filepath, data, _header)
             self.data['manual_gauss_fit_log'] = data_log
         elif peakguess == 1:
             self.data['auto_gauss_fit'] = data
             filepath = self.workspace + 'auto_multi_gauss_fit.txt'
-            self.myIo.write_nparray_txt(filepath, data)
+            self.myIo.write_nparray_txt(filepath, data, _header)
             self.data['auto_gauss_fit_log'] = data_log
             
         #set fit parameters for polynom fit
@@ -230,14 +237,14 @@ class ProgHandler():
         for i in xrange(1,n):
             _newx += param[i] * np.power(x, i)
         #save wavelength axis
+        _tofile = np.column_stack((x, _newx))
+        _header = [['Pixel', 'Wavelength']]
         if peakguess == 0:
-            _tofile = np.column_stack((x, _newx))
             filepath = self.workspace + 'manual_calibrated_wavelength.txt'
-            self.myIo.write_nparray_txt(filepath, _tofile)
+            self.myIo.write_nparray_txt(filepath, _tofile, _header)
         elif peakguess == 1:
-            _tofile = np.column_stack((x, _newx))
             filepath = self.workspace + 'auto_calibrated_wavelength.txt'
-            self.myIo.write_nparray_txt(filepath, _tofile)
+            self.myIo.write_nparray_txt(filepath, _tofile, _header)
 
         
     def detect_peaks(self, max_n_peaks = 6):

@@ -234,7 +234,7 @@ class RnIo():
         #print _arr
         return _arr
         
-    def write_nparray_txt(self, filepath, nparray, delimiter = '\t'):
+    def write_nparray_txt(self, filepath, nparray, header = [], delimiter = '\t'):
         """ Write an 2D numpy array to ascii file
         
         filepath (str): complete filepath for new file
@@ -245,6 +245,14 @@ class RnIo():
         _nrows = nparray.shape[0]
         _ncolumns = nparray.shape[1]
         with open(filepath, 'wb') as f:
+            #check if header exists
+            if len(header) > 0:
+                for row in header:
+                    _row = ''
+                    for item in row:
+                        _row += str(item) + delimiter
+                    _row += '\n'
+                    f.write(_row)
             for y in xrange(_nrows):
                 _row = ''
                 for x in xrange(_ncolumns):
