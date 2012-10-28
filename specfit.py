@@ -259,7 +259,8 @@ class specfit(QtGui.QMainWindow):
         #set peaklist to perform fit on
         self.ph.peaklist = self.get_peaks_forfit()
         #start the wavelength calibration
-        self.ph.calibrate_wavelength(peakguess = 0)
+        #self.ph.calibrate_wavelength(peakguess = 0)
+        self.ph.calibrate_wavelength_bounds(peakguess=0)
         
     def fit_peaks_automatic(self):
         """ Fit peaks and detect peaks automatically
@@ -268,7 +269,8 @@ class specfit(QtGui.QMainWindow):
         #set peaklist to perform fit on
         self.ph.peaklist = self.get_peaks_forfit()
         #start the wavelength calibration
-        self.ph.calibrate_wavelength(peakguess = 1)
+        #self.ph.calibrate_wavelength(peakguess = 1)
+        self.ph.calibrate_wavelength_bounds(peakguess=1)
        
     def plot_things(self):
         """ Responds to open Plotter call from Plotter.ui

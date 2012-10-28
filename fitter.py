@@ -5,6 +5,7 @@ import numpy as np
 from scipy.optimize import leastsq
 import matplotlib.pyplot as plt
 #from multiprocessing import Pool, Process
+from lmfit import minimize, Parameters, Parameter, report_errors
 
 class Fitter():
     """ Class for fitting data
@@ -236,7 +237,7 @@ class Fitter():
             plt.plot(x, y, label='Real Data')
             plt.plot(x, y_est, 'g.', label='Fitted')
             plt.legend()
-            plt.show
+            plt.show()
             #plt.show()
         
         _tup = (x, y, y_est)
@@ -275,24 +276,113 @@ class Fitter():
             plt.plot(x, y, label='Real Data')
             plt.plot(x, y_est, 'g.', label='Fitted')
             plt.legend()
-            plt.show
+            plt.show()
             #plt.show()
             
         _tup = (x, y, y_est)
         data = np.column_stack(_tup)
         return param, data
 
+    def multi_gauss_fit_bounds(self, x, y, n, params, plotflag = True):
+        """ Multiple gauss fit using possibilities of lmfit
+          
+        x (numpy.ndarray): x-axis
+        y (numpy.ndarray): y-axis
+        n (int): number of gauss functions to fit
+        params (lmfit.Parameters): paramter object (value must not be min or 
+                                    max bound)
+        
+        """
+        def res(params, x, y):
+            b = params['b_0'].value
+            a = []
+            m = []
+            s = []
+            for i in xrange(n):
+                a.append(params['a_'+str(i)].value)
+                m.append(params['m_'+str(i)].value)
+                s.append(params['s_'+str(i)].value)      
+            #print b, a, m, s
+            #generation fit function
+            model = self.gauss(x, b, a[0], m[0], s[0])
+            for i in xrange(1,n):
+                model += self.gauss(x, b, a[i], m[i], s[i])
+            err = y - model
+            
+            return err
+            
+        #do fit
+        result = minimize(res, params, args=(x, y))
+        # calculate final result
+        b = params['b_0'].value
+        a = []
+        m = []
+        s = []
+        for i in xrange(n):
+            a.append(params['a_'+str(i)].value)
+            m.append(params['m_'+str(i)].value)
+            s.append(params['s_'+str(i)].value)      
+        #print b, a, m, s
+        #generation fit function
+        fit = self.gauss(x, b, a[0], m[0], s[0])
+        for i in xrange(1,n):
+            fit += self.gauss(x, b, a[i], m[i], s[i])
+        """
+        print result.nfev
+        print result.success
+        print result.message
+        print result.ier
+        print result.lmdif_message
+        print result.nvarys
+        print result.ndata
+        print result.nfree
+        print result.params
+        
+        # write error report
+        report_errors(params)
+        """
+        if plotflag == True:
+            # try to plot results
+            try:
+                import pylab
+                pylab.plot(x, y, 'k+')
+                pylab.plot(x, fit, 'r')
+                pylab.show()
+            except:
+                pass
+        
+        return result.params, fit
         
 if __name__ == "__main__":
     myfitter = Fitter()
     
+    # create a set of Parameters
+    params = Parameters()
+    params.add('b_0', value= 0.01, min=0)
+    params.add('a_0', value = 1)
+    params.add('a_1', value = 1)
+    params.add('m_0', value = -5)
+    params.add('m_1', value = 2)
+    params.add('s_0', value = 4)
+    params.add('s_1', value = 4)
+    
+    #fit params
+    n = 2
+    x, y = myfitter.create_testdata()
+    params, residual = myfitter.multi_gauss_fit_bounds(x, y, n, params)
+    print params
+
+    """
     n = 2
     b = 0.
     a = [1., 1.]
     m = [-5., 1.]
     s = [1., 1.]
     x, y = myfitter.create_testdata()
-    param = myfitter.multi_gauss_fit(x, y, n, b, a, m, s)
+    b, a, m, s, data = myfitter.multi_gauss_fit(x, y, n, b, a, m, s, plotflag = True)
+    print b, a, m, s
+    """
+    
 
     
     
