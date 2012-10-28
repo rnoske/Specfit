@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
-    <height>586</height>
+    <width>687</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
   <widget class="MplWidget" name="MPLArea" native="true">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>10</y>
+     <x>20</x>
+     <y>40</y>
      <width>651</width>
      <height>561</height>
     </rect>
@@ -38,67 +38,20 @@
     <enum>Qt::NoContextMenu</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="PLOT_Button">
+  <widget class="QComboBox" name="Plot_comboBox">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>180</y>
-     <width>75</width>
-     <height>23</height>
+     <y>10</y>
+     <width>141</width>
+     <height>22</height>
     </rect>
    </property>
-   <property name="text">
-    <string>PLOT!</string>
+   <property name="maxVisibleItems">
+    <number>100</number>
    </property>
-  </widget>
-  <widget class="QCheckBox" name="check_rawData">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>11</x>
-     <y>101</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="mouseTracking">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Spectrum</string>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="autoExclusive">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="check_spectrumlog">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>130</y>
-     <width>91</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="mouseTracking">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Spectrum log</string>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="autoExclusive">
-    <bool>true</bool>
+   <property name="sizeAdjustPolicy">
+    <enum>QComboBox::AdjustToMinimumContentsLength</enum>
    </property>
   </widget>
  </widget>
@@ -113,18 +66,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>PLOT_Button</sender>
-   <signal>clicked()</signal>
+   <sender>Plot_comboBox</sender>
+   <signal>activated(int)</signal>
    <receiver>Plotterui</receiver>
    <slot>myPlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>50</x>
-     <y>202</y>
+     <x>251</x>
+     <y>26</y>
     </hint>
     <hint type="destinationlabel">
-     <x>56</x>
-     <y>225</y>
+     <x>252</x>
+     <y>48</y>
     </hint>
    </hints>
   </connection>

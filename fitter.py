@@ -153,7 +153,7 @@ class Fitter():
         return b+a*np.exp(-((x-m)/s)**2)
         
       
-    def multi_gauss_fit(self, x, y, n, b, a, m, s, plotflag = True, filepath = ''):
+    def multi_gauss_fit(self, x, y, n, b, a, m, s, plotflag = True):
         """ Fit n Gauss functions do data
         
         x (np.array): numpy array with x-axis
@@ -176,7 +176,7 @@ class Fitter():
             multiGaussFit(x, y_real, n, m, s)
             
         Returns:
-            b, a, m, s
+            param, data (numpy.ndarrays)
             
         """    
         """
@@ -226,28 +226,24 @@ class Fitter():
             s.append(param[i+1+(2*n)])
             #print a, m, s     
         
+        #generation fit function
+        y_est = self.gauss(x, b, a[0], m[0], s[0])
+        for i in xrange(1,n):
+            y_est += self.gauss(x, b, a[i], m[i], s[i])
         #plotting
         if plotflag == True:
-            #generation fit function
-            y_est = self.gauss(x, b, a[0], m[0], s[0])
-            for i in xrange(1,n):
-                y_est += self.gauss(x, b, a[i], m[i], s[i])
-            
             plt.clf()
             plt.plot(x, y, label='Real Data')
             plt.plot(x, y_est, 'g.', label='Fitted')
             plt.legend()
-            
-            if filepath != '':
-                try:
-                    plt.savefig(filepath)
-                except:
-                    plt.show
+            plt.show
             #plt.show()
         
-        return b, a, m, s
+        _tup = (x, y, y_est)
+        data = np.column_stack(_tup)
+        return b, a, m, s, data
         
-    def polynom(self, x, y, n, p, plotflag = True, filepath = ''):
+    def polynom(self, x, y, n, p, plotflag = True):
         """ Fit a polynom to the given data
         
         x (np.array): numpy array with x-axis
@@ -268,24 +264,23 @@ class Fitter():
         param, success = leastsq(res, p, args = (y, x))
         #print param
         
+        
+        #generation fit function
+        y_est = param[0]
+        for i in xrange(1,n):
+            y_est += param[i] * np.power(x, i)
         #plotting
         if plotflag == True:
-            #generation fit function
-            y_est = param[0]
-            for i in xrange(1,n):
-                y_est += param[i] * np.power(x, i)
-            
             plt.clf()
             plt.plot(x, y, label='Real Data')
             plt.plot(x, y_est, 'g.', label='Fitted')
             plt.legend()
-            if filepath != '':
-                try:
-                    plt.savefig(filepath)
-                except:
-                    plt.show
+            plt.show
             #plt.show()
-        return param
+            
+        _tup = (x, y, y_est)
+        data = np.column_stack(_tup)
+        return param, data
 
         
 if __name__ == "__main__":

@@ -26,6 +26,7 @@ class ProgHandler():
         self.fitter = fitter.Fitter()
         self.config = Config.Config()
         self.fdict = self.config.getConfigOptions('fit')
+        self.data = {}
         
     def set_spectrum(self, nparray):
         """ Sets a spectrum file on which work is done
@@ -34,7 +35,15 @@ class ProgHandler():
                 second = intensity
                 
         """
-        self.spectrum = nparray
+        #self.spectrum = nparray
+        self.data['spectrum'] = nparray
+        #add spectrum with logarithmic scale
+        _arr = nparray
+        _x = _arr[:,0]
+        _y = _arr[:,1]
+        _y = np.log10(_y)
+        _spectrum_logy = np.column_stack((_x,_y))
+        self.data['spectrum_logy'] = _spectrum_logy
         
     def set_peaklist(self, nparray):
         """ Sets a peaklist file
@@ -52,100 +61,86 @@ class ProgHandler():
         """
         self.workspace = workspace
         
-        
-    def calibrate_wavelength(self):
+    
+    def calibrate_wavelength(self, peakguess = 1):
         """ Calibrate the wavelength of the spectrum
         
-        sdict: dictionary of some values
+        peakguess (int): 0 = manual, 1 = automatic
         
         """
         _pl = self.peaklist
+        _spectrum = self.data['spectrum']
+        y = _spectrum[:, 1]
+        x = _spectrum[:, 0]
         
-        _gpx =[]
-        _wl = []
-        for i in xrange(len(_pl)):
-            _gpx.append(_pl[i][2])
-            _wl.append(_pl[i][0])
-        
-        n = len(_gpx) #number of gauss functions to fit
-        y = self.spectrum[:, 1]
-        x = self.spectrum[:, 0]
-        b = 0. #background
-        #a = _g_int * (max(y)/max(_g_int)) #intensities are bullshit!
-        
-        m = _gpx
-        #print m
-        s = [float(self.fdict['inital_s'])]*n
-        
-        #only for testing!
-        #m = [96, 111, 233, 712, 847, 856]
-        
-        a = []
-        for i in xrange(len(m)):
-            a.append(y[m[i]])
-        _sp = self.workspace + 'manual_multi_gauss_fit.jpg'
-        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, 
-                                            plotflag = True, filepath = _sp)
-        b,a,m,s = param
-        #print b, a, m, s
-        n = 3
-        p = [1] * n
-        _sp = self.workspace + 'manual_fit_polynom.jpg'
-        param = self.fitter.polynom(m, _wl, n, p, plotflag = True, filepath = _sp)
-        #print param
-        print str(param[0]) + ' + ' +str(param[1]) + '*x' + ' + ' + str(param[2])+'x^2'
-        _newx = param[0]
-        for i in xrange(1,n):
-            _newx += param[i] * np.power(x, i)
-        #print x, _newx
-        #save things
-        _tofile = np.column_stack((x, _newx))
-        filepath = self.workspace + 'manual_calibrated_wavelength.txt'
-        self.myIo.write_nparray_txt(filepath, _tofile)
-        
-    def calibrate_wavelength_auto(self):
-        """ Calibrate Wavelength with automatic peak detection
-        
-        """
-        _pl = self.peaklist
-        _peaks = self.detect_peaks(len(_pl))
-        if len(_pl) != len(_peaks):
-            logging.error('peaklist longer than detected peaks!')
-        #fitting
+        if peakguess == 0:
+            _peaks = []
+            for i in xrange(len(_pl)):
+                _peaks_px = _pl[i][2]
+                _peaks_int = y[_peaks_px]
+                _peaks.append([_peaks_px, _peaks_int])
+        elif peakguess ==1:
+            _peaks = self.detect_peaks(len(_pl))
+            if len(_pl) != len(_peaks):
+                logging.error('peaklist longer than detected peaks!')
         _peaks = np.array(_peaks)
+                
+        # set fit parameters:
+        n = len(_peaks)
         b = 0.
         m = _peaks[:,0]
         a = _peaks[:,1]
-        s = [2] * len(_pl)
-        n = len(_pl) #number of gauss functions to fit
-        y = self.spectrum[:, 1]
-        x = self.spectrum[:, 0]
-        
-        _sp = self.workspace + 'auto_multi_gauss_fit.jpg'
-        param = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s, 
-                                            plotflag = True, filepath = _sp)
-        b,a,m,s = param
-        #print b, a, m, s
-        n = 3
+        s = [float(self.fdict['inital_s'])]*n
+        #fit:
+        b, a, m, s, data = self.fitter.multi_gauss_fit(x, y, n, b, a, m, s,
+                                                       plotflag = False)
+        #save results
+        _x = data[:,0]
+        _y = np.log(data[:,1])
+        _y2 = np.log(data[:,2])
+        data_log = np.column_stack((_x, _y, _y2))
+        if peakguess == 0:
+            self.data['manual_gauss_fit'] = data
+            filepath = self.workspace + 'manual_multi_gauss_fit.txt'
+            self.myIo.write_nparray_txt(filepath, data)
+            self.data['manual_gauss_fit_log'] = data_log
+        elif peakguess == 1:
+            self.data['auto_gauss_fit'] = data
+            filepath = self.workspace + 'auto_multi_gauss_fit.txt'
+            self.myIo.write_nparray_txt(filepath, data)
+            self.data['auto_gauss_fit_log'] = data_log
+            
+        #set fit parameters for polynom fit
+        n = 3 #polynom order + 1 (for constant)
         p = [1] * n
         _wl = []
         for i in xrange(len(_pl)):
             _wl.append(_pl[i][0])
-        _sp = self.workspace + 'auto_fit_polynom.jpg'
-        param = self.fitter.polynom(m, _wl, n, p, plotflag = True, filepath = _sp)
-        #print param
+        #fit:
+        param, data = self.fitter.polynom(m, _wl, n, p, plotflag = True)
+        #save results:
+        if peakguess == 0:
+            filepath = self.workspace + 'manual_polynom_fit.txt'
+            self.myIo.write_nparray_txt(filepath, data)
+        elif peakguess == 1:
+            filepath = self.workspace + 'auto_polynom_fit.txt'
+            self.myIo.write_nparray_txt(filepath, data)
+        #print linear equation:
         print str(param[0]) + ' + ' +str(param[1]) + '*x' + ' + ' + str(param[2])+'x^2'
+        #calculate new wavelength axis:
         _newx = param[0]
         for i in xrange(1,n):
             _newx += param[i] * np.power(x, i)
-        #print x, _newx
-        _tofile = np.column_stack((x, _newx))
-        #print _tofile
-        filepath = self.workspace + 'auto_calibrated_wavelength.txt'
-        self.myIo.write_nparray_txt(filepath, _tofile)
-        
-        
-        
+        #save wavelength axis
+        if peakguess == 0:
+            _tofile = np.column_stack((x, _newx))
+            filepath = self.workspace + 'manual_calibrated_wavelength.txt'
+            self.myIo.write_nparray_txt(filepath, _tofile)
+        elif peakguess == 1:
+            _tofile = np.column_stack((x, _newx))
+            filepath = self.workspace + 'auto_calibrated_wavelength.txt'
+            self.myIo.write_nparray_txt(filepath, _tofile)
+
         
     def detect_peaks(self, max_n_peaks = 6):
         """ Detect maxima in given data
@@ -153,8 +148,9 @@ class ProgHandler():
         max_n_peaks (int): maximum number of peaks that shuld be returned
         
         """
-        y = self.spectrum[:, 1]
-        x = self.spectrum[:, 0]
+        _spectrum = self.data['spectrum']
+        y = _spectrum[:, 1]
+        x = _spectrum[:, 0]
         
         #look for maxima
         max_peaks, min_peaks = peakdetect.peakdetect(y, x, lookahead= 5, delta = 0)

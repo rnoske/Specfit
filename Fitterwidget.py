@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Fitterwidget.ui'
 #
-# Created: Thu Oct 25 19:06:33 2012
+# Created: Sun Oct 28 12:59:39 2012
 #      by: PyQt4 UI code generator 4.9.5
 #
 # WARNING! All changes made in this file will be lost!

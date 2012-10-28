@@ -6,60 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>548</width>
-    <height>676</height>
+    <width>373</width>
+    <height>773</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Specfit</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="OpenSpectrum_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>40</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Open Spectrum</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="OpenPeaklist_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Open Peaklist</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Plotter_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>330</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Plot things</string>
-    </property>
-   </widget>
    <widget class="QTableWidget" name="Peaklist_Table">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>0</x>
       <y>0</y>
-      <width>391</width>
-      <height>641</height>
+      <width>361</width>
+      <height>691</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -101,44 +62,44 @@
      </property>
     </column>
    </widget>
-   <widget class="QPushButton" name="SetWorkspace_pushButton">
+   <widget class="QSplitter" name="splitter">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>70</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Set Workspace</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fitPeaksAutomatic_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>260</y>
-      <width>131</width>
+      <x>10</x>
+      <y>700</y>
+      <width>225</width>
       <height>23</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Automatic fit wavelength</string>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
     </property>
-   </widget>
-   <widget class="QPushButton" name="FitPeaksManual_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>220</y>
-      <width>131</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Manual fit wavelength</string>
-    </property>
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Wavelength:</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="addWavelength_doubleSpinBox">
+     <property name="decimals">
+      <number>4</number>
+     </property>
+     <property name="maximum">
+      <double>10000.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="addPeak_pushButton">
+     <property name="text">
+      <string>Add Peak</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -146,18 +107,72 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>548</width>
+     <width>373</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFiles">
+    <property name="title">
+     <string>Files</string>
+    </property>
+    <addaction name="actionOpen_Peaklist"/>
+    <addaction name="actionOpen_Spectrum"/>
+    <addaction name="actionSet_Workspace"/>
+   </widget>
+   <widget class="QMenu" name="menuCalibrate_Wavelength">
+    <property name="title">
+     <string>Calibrate Wavelength</string>
+    </property>
+    <addaction name="actionManual_fit"/>
+    <addaction name="actionAutomatic_fit"/>
+   </widget>
+   <widget class="QMenu" name="menuPlotter">
+    <property name="title">
+     <string>Plotter</string>
+    </property>
+    <addaction name="actionOpen_Plotter"/>
+   </widget>
+   <addaction name="menuFiles"/>
+   <addaction name="menuCalibrate_Wavelength"/>
+   <addaction name="menuPlotter"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen_Peaklist">
+   <property name="text">
+    <string>Open Peaklist</string>
+   </property>
+  </action>
+  <action name="actionOpen_Spectrum">
+   <property name="text">
+    <string>Open Spectrum</string>
+   </property>
+  </action>
+  <action name="actionSet_Workspace">
+   <property name="text">
+    <string>Set Workspace</string>
+   </property>
+  </action>
+  <action name="actionManual_fit">
+   <property name="text">
+    <string>Manual fit</string>
+   </property>
+  </action>
+  <action name="actionAutomatic_fit">
+   <property name="text">
+    <string>Automatic fit</string>
+   </property>
+  </action>
+  <action name="actionOpen_Plotter">
+   <property name="text">
+    <string>Open Plotter</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>OpenPeaklist_pushButton</sender>
-   <signal>clicked()</signal>
+   <sender>actionOpen_Peaklist</sender>
+   <signal>triggered()</signal>
    <receiver>Specfit</receiver>
    <slot>open_peaklist()</slot>
    <hints>
@@ -172,8 +187,8 @@
    </hints>
   </connection>
   <connection>
-   <sender>OpenSpectrum_pushButton</sender>
-   <signal>clicked()</signal>
+   <sender>actionOpen_Spectrum</sender>
+   <signal>triggered()</signal>
    <receiver>Specfit</receiver>
    <slot>open_spectrum()</slot>
    <hints>
@@ -188,8 +203,8 @@
    </hints>
   </connection>
   <connection>
-   <sender>Plotter_pushButton</sender>
-   <signal>clicked()</signal>
+   <sender>actionOpen_Plotter</sender>
+   <signal>triggered()</signal>
    <receiver>Specfit</receiver>
    <slot>plot_things()</slot>
    <hints>
@@ -204,8 +219,8 @@
    </hints>
   </connection>
   <connection>
-   <sender>FitPeaksManual_pushButton</sender>
-   <signal>clicked()</signal>
+   <sender>actionManual_fit</sender>
+   <signal>triggered()</signal>
    <receiver>Specfit</receiver>
    <slot>fit_peaks_manual()</slot>
    <hints>
@@ -220,8 +235,8 @@
    </hints>
   </connection>
   <connection>
-   <sender>fitPeaksAutomatic_pushButton</sender>
-   <signal>clicked()</signal>
+   <sender>actionAutomatic_fit</sender>
+   <signal>triggered()</signal>
    <receiver>Specfit</receiver>
    <slot>fit_peaks_automatic()</slot>
    <hints>
@@ -236,8 +251,8 @@
    </hints>
   </connection>
   <connection>
-   <sender>SetWorkspace_pushButton</sender>
-   <signal>clicked()</signal>
+   <sender>actionSet_Workspace</sender>
+   <signal>triggered()</signal>
    <receiver>Specfit</receiver>
    <slot>set_workspace()</slot>
    <hints>
@@ -251,6 +266,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>addPeak_pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Specfit</receiver>
+   <slot>add_peak()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>732</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>759</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open_spectrum()</slot>
@@ -259,5 +290,6 @@
   <slot>plot_things()</slot>
   <slot>fit_peaks_automatic()</slot>
   <slot>set_workspace()</slot>
+  <slot>add_peak()</slot>
  </slots>
 </ui>

@@ -56,6 +56,25 @@ class Qt4MplCanvas(FigureCanvas):
         mpl.axes.Axes.relim(self.axes)
         self.fig.canvas.draw()
         
+    def updatePlot_2y(self, x, y, y2):
+        """ Updates plot window
+        
+        x (arr): x values
+        y (arr): y values
+        y2 (arr): y2 values
+        
+        """
+        self.axes.clear()
+        self.x = x
+        self.y = y
+        self.y2 = y2
+        #self.fig.canvas.draw()
+        self.axes.plot(self.x, self.y, self.x, self.y2)
+        mpl.axes.Axes.relim(self.axes)
+        self.fig.canvas.draw()
+        
+    
+        
     def update_plot_verrbar(self, x, y, errbar):
         """ Update plot with errorbars
         

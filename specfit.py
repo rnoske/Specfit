@@ -62,6 +62,7 @@ class specfit(QtGui.QMainWindow):
             _filepath = self.sdict['peaklist']
             arr = self.myIo.read_originPeaklist_nparray(_filepath)
             self.ph.set_peaklist(arr)
+            self.populate_peaklistTable()
         except (KeyError, IOError, TypeError):
             self.open_peaklist()
             _flag = True
@@ -179,7 +180,7 @@ class specfit(QtGui.QMainWindow):
             _tw.setCellWidget(i, 0, _cb)
             
             #Wavelength entry
-            _val = float(_pl[i, 0]) #ädata to be displayed
+            _val = float(_pl[i, 0]) #data to be displayed
             _val = QtCore.QVariant(_val) #convert to QVariant
             item = QtGui.QTableWidgetItem(0) #ka wofür die 0 ist
             item.setData(0, _val) #0=data #set Vairant data to tableitem
@@ -192,7 +193,6 @@ class specfit(QtGui.QMainWindow):
             item.setData(0, _val) #0=data #set Vairant data to tableitem
             _tw.setItem(i,2,item) #place item in table
             
-            
             #_tw.setCellWidget(i, 1, _wl)
             #_tw.setCellWidget(i, 2, _int)
             #_tmp = _tw.item(i, 1)
@@ -202,6 +202,35 @@ class specfit(QtGui.QMainWindow):
             #_tmp3 = _tmp2.toFloat()[0]
             #print _tmp3
         _tw.resizeColumnsToContents()
+        
+    def add_peak(self):
+        """ Add an peak to the peaklist table
+        
+        """
+        _tw = self.ui.Peaklist_Table
+        _cRows = _tw.rowCount() #current number of rows
+        _tw.setRowCount(_cRows + 1) # add row
+        #populate new row
+        #checkbox
+        _cb = QtGui.QCheckBox()
+        _cb.setCheckState(0)
+        _tw.setCellWidget(_cRows, 0, _cb)
+        #Wavelength entry
+        _val = self.ui.addWavelength_doubleSpinBox.value() #data to be displayed
+        _val = QtCore.QVariant(_val) #convert to QVariant
+        item = QtGui.QTableWidgetItem(0) #ka wofür die 0 ist
+        item.setData(0, _val) #0=data #set Vairant data to tableitem
+        _tw.setItem(_cRows,1,item) #place item in table
+        #Intensity entry
+        _val = 0.0 #ädata to be displayed
+        _val = QtCore.QVariant(_val) #convert to QVariant
+        item = QtGui.QTableWidgetItem(0) #ka wofür die 0 ist
+        item.setData(0, _val) #0=data #set Vairant data to tableitem
+        _tw.setItem(_cRows,2,item) #place item in table
+        
+        #resize columns
+        _tw.resizeColumnsToContents()
+            
         
     def get_peaks_forfit(self):
         """ Get the peaks for fitting
@@ -227,28 +256,20 @@ class specfit(QtGui.QMainWindow):
         """ Fit peaks to the spectrum
         
         """
+        #set peaklist to perform fit on
         self.ph.peaklist = self.get_peaks_forfit()
-        """
-        self.sdict = {}
-        _tmp = self.ui.Start_nm_doubleSpinBox.value()
-        self.sdict['Start_nm'] = _tmp
-        _tmp = self.ui.End_nm_doubleSpinBox.value()
-        self.sdict['End_nm'] = _tmp
-        """
-        self.ph.calibrate_wavelength()
+        #start the wavelength calibration
+        self.ph.calibrate_wavelength(peakguess = 0)
         
     def fit_peaks_automatic(self):
         """ Fit peaks and detect peaks automatically
         
         """
+        #set peaklist to perform fit on
         self.ph.peaklist = self.get_peaks_forfit()
-        self.ph.calibrate_wavelength_auto()
-        
-        
-        
-        
-        
-        
+        #start the wavelength calibration
+        self.ph.calibrate_wavelength(peakguess = 1)
+       
     def plot_things(self):
         """ Responds to open Plotter call from Plotter.ui
         
@@ -258,74 +279,49 @@ class specfit(QtGui.QMainWindow):
         self.pui.setupUi(self)
         self.show()
         
+        #call myPlot to display something
+        self.myPlot()
+        
     def myPlot(self):
-        # checked = 2 unchecked = 0
-        if self.pui.check_rawData.checkState() == 2:
-            self.plot_spectrum()
-        elif self.pui.check_spectrumlog.checkState() ==2:
-            self.plot_spectrumlog()
-        else:
-            self.test_plotter()
-            
-    def updatePlot(self, x, y):
-        """ Updates plot window
-        
-        x (arr): x values
-        y (arr): y values
+        """ Responds to event from Plot_button from Plotter.ui
         
         """
-        self.pui.MPLArea.qmc.updatePlot(x,y)
+        #add possible data to plot
+        _pD = self.ph.data
+        #shortcut to comboBox
+        _cB = self.pui.Plot_comboBox
         
-    def test_plotter(self):
-        """ my testplotter func"""
-        _x = [0,1]
-        _y = [0,0]
-        self.updatePlot(_x,_y)
-        
-    def plot_spectrum(self):
-        """ Plot spectrum file
-        
-        """
-        try:
-            _arr = self.ph.spectrum
-        except NameError:
-            logging.error('Spectrum file nicht gesetzt')
-        
-        _x = _arr[:,0]
-        _y = _arr[:,1]
-        self.updatePlot(_x,_y)
-        
-    def plot_spectrumlog(self):
-        """ Plot the spectrum with logarytmic y- axis
-        
-        """
-        try:
-            _arr = self.ph.spectrum
-        except NameError:
-            logging.error('Spectrum file nicht gesetzt')
-        
-        _x = _arr[:,0]
-        _y = _arr[:,1]
-        _y = np.log10(_y)
-        self.updatePlot(_x,_y)
-        
-        
-    def plot_peaklist(self):
-        """ Plot peaklist
-        
-        """
-        try:
-            _arr = self.ph.peaklist
-        except NameError:
-            logging.error('Spectrum file nicht gesetzt')
-        _arr  = np.array(_arr)
-        print _arr
-        print _arr.shape
-        
-        _x = _arr[:,0]
-        _y = _arr[:,1]
-        self.updatePlot(_x,_y)
+        _seen = []
+        for i in range(_cB.count()):
+            _cB_c = _cB.itemData(i, 0).toString()
+            _cB_c = str(_cB_c) #convert pyqt string to normal string
+            if _cB_c not in _seen:
+                _seen.append(_cB_c)
 
+        for key in _pD.keys():
+            if key not in _seen:
+                _val = QtCore.QVariant(key) #convert to QVariant
+                #_cB.setItemData(i, _val, 0)
+                _cB.addItem(key, _val)
+        
+        #current item index
+        _cB_index = _cB.currentIndex() 
+        #get Variant Object as pyqt string object
+        _cB_c = _cB.itemData(_cB_index, 0).toString()
+        _cB_c = str(_cB_c) #convert pyqt string to normal string
+        
+        data = _pD[_cB_c]
+        if data.shape[1] == 2:
+            _x = data[:, 0]
+            _y = data[:, 1]
+            self.pui.MPLArea.qmc.updatePlot(_x,_y)
+        elif data.shape[1] == 3:
+            _x = data[:, 0]
+            _y = data[:, 1]
+            _y2 = data[:, 2]
+            self.pui.MPLArea.qmc.updatePlot_2y(_x,_y, _y2)
+            
+    
 if __name__ == "__main__":
     app2 = QtGui.QApplication(sys.argv)
     myspecfit = specfit()
